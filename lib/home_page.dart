@@ -14,18 +14,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final titleController = TextEditingController();
   var array=[];
+  var resultArray =[];
+  var listArray= ["강낭","당랑","망방","상장","앙장","창장"];
+
   @override
   void dispose() {
     titleController.dispose();
-
     super.dispose();
-  } // 화면이 pop될때 같이 해제를 시켜주어야 함
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    String word = "강낭";
-    var wordArray = splitLetter(word);
+
     titleController..text = "";
     return Scaffold(
       appBar: AppBar(
@@ -49,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     String word = titleController.text;
                     array = splitLetter(word);
+                    resultArray = aa(array, listArray);
                   });
                 },
               ),
@@ -56,9 +58,35 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 300,),
             Text(array.toString()),
+            SizedBox(height: 10,),
+            Text(resultArray.toString()),
           ],
         ),
       ),
     ); // This trailing comma makes auto-formatting nicer for build methods.
   }
+
+  List<dynamic> aa(var item, var list){
+    int index = 0;
+    int counter = item.length;
+    for(int i =0;i<counter;i++){
+      if(item[i].length ==1){
+        if(item[i] == list[i][0]){
+          index++;
+        }
+      }
+
+
+    }
+
+
+
+
+    return resultArray;
+  }
+
+
 }
+
+
+
