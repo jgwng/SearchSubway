@@ -15,6 +15,7 @@ class SearchBar extends StatelessWidget{
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Container(
+          width: 250,
           height: 36,
           // padding: EdgeInsets.all(24),
           child : TextField(
@@ -35,10 +36,10 @@ class SearchBar extends StatelessWidget{
                 ),
 
                 hintText: '검색하세요.',
-                prefixIcon: Image.asset('assets/image/register_page/search.png',),
+                prefixIcon: IconButton(icon: Icon(Icons.search)),
                 suffixIcon: GestureDetector(
                     onTap: suffixIconOnTab,
-                    child: Image.asset('assets/image/register_page/x.png',)
+                    child: IconButton(icon: Icon(Icons.clear))
                 ),
                 filled: true,
                 fillColor: Color.fromRGBO(142, 142, 147, 0.24),
