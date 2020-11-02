@@ -12,9 +12,7 @@ class SearchBar extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Container(
+    return Container(
           width: 250,
           height: 36,
           // padding: EdgeInsets.all(24),
@@ -55,7 +53,6 @@ class SearchBar extends StatelessWidget{
             controller: controller,
             onChanged: onChange,
           )
-      ),
-    );
+      );
   }
 }
