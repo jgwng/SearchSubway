@@ -18,11 +18,11 @@ class _MyHomePageState extends State<MyHomePage> {
   var array = [];
   var resultArray = [];
   var listResultArray = [];
-  var listArray = ["강낭", "당랑", "망방", "상장", "앙장", "창장"];
+  var listArray = ["강낭","강상", "당랑", "망방", "상장", "앙장", "창장"];
   bool isFocused = false;
 
-  List<String> stations = List<String>();
-  List<String> stationsForDisplay = List<String>();
+  List<dynamic> stations = List<dynamic>();
+  List<dynamic> stationsForDisplay = List<dynamic>();
 
   FocusNode searchWordNode = FocusNode();
   void _onFocusChange() async {
@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var wordResult = splitLetter(listArray[i]);
       listResultArray.add(wordResult);
     }
-    searchWordNode.addListener(_printLatestValue);
+    searchWordNode.addListener(_onFocusChange);
     super.initState();
   }
 
@@ -50,11 +50,21 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-
+  void onChange(String text){
+    setState(() {
+//      array = splitLetter(text);
+//      stationsForDisplay = compareArray(array, listResultArray,listArray);
+//      print(stationsForDisplay);
+//      array = splitLetter(text);
+//
+//      stationsForDisplay = compareArray(array, listResultArray,listArray);
+      array = splitLetter(text);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    wordController..text = "";
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -73,41 +83,34 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    padding: EdgeInsets.only(left: 20),
+                  width: MediaQuery.of(context).size.width ,
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                     child: SearchBar(
                       controller: wordController,
                       focusNode: searchWordNode,
+                      onChange: onChange,
                     )),
-
-//                Expanded(
-//                  child: ListView.builder(
-//                    itemCount: stationsForDisplay.length,
-//                    shrinkWrap: false,
-//                    itemBuilder: (context,index){
-//                      return _listItem(index);
-//                    },
-//                  ),
-//                ),
-                Text(array.toString()),
-                SizedBox(
-                  height: 10,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: stationsForDisplay.length,
+                    shrinkWrap: false,
+                    itemBuilder: (context,index){
+                      return _listItem(index);
+                    },
+                  ),
                 ),
-                Text(resultArray.toString()),
+
               ],
             ),
           ),
         )); // This trailing comma makes auto-formatting nicer for build methods.
   }
-  _printLatestValue() {
-    print("Second text field: ${wordController.text}");
-  }
+
 
   _listItem(index) {
     return GestureDetector(
       onTap: (){
-        setState(() {
 
-        });
       },
       child: Container(
           decoration: BoxDecoration(
@@ -116,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
               )
           ),
           child: Padding(
-            padding: EdgeInsets.only(left: 31,top: 25.5,bottom:25.5),
+            padding: EdgeInsets.only(left: 20,top: 20,bottom:20),
             child: Text(
               stationsForDisplay[index],
               style: TextStyle(
@@ -140,7 +143,12 @@ class _MyHomePageState extends State<MyHomePage> {
             index++;
           }
         } else {
-          if (equalizer(item[j], listChanged[i][j])) {
+          if(item[i][2]==""){
+            if((item[i][0]==listChanged[i][j][0]) &&(item[i][0]==listChanged[i][j][0]) ){
+              index++;
+            }
+          }
+          else if (equalizer(item[j], listChanged[i][j])) {
             index++;
           }
         }
@@ -153,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return resultArray;
   }
-  Future<List<String>> search(String search) async {
+  Future<List<dynamic>> search(String search) async {
     await Future.delayed(Duration(seconds: 2));
     array = splitLetter(search);
     stationsForDisplay = compareArray(array, listResultArray,listArray);
