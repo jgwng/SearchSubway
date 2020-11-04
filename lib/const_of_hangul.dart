@@ -13,7 +13,7 @@ const ga = 44032;
 
 int wordToInteger(String text){
   double a = double.parse(text);
-  int a_int = a.round();
+  int a_int = a.floor();
   return a_int;
 }
 
@@ -23,14 +23,14 @@ List<dynamic> splitLetter(String text){
   var arr = List(wordarray.length);
   for(int i=0;i<wordarray.length;i++){
     var unicode = (wordarray[i]).codeUnits;
-    int unicodeInt = unicode[0];
+     int unicodeInt = unicode[0];
     unicodeInt = unicodeInt - ga;
 
     var fn = (unicodeInt/588);
     int fnInt = wordToInteger(fn.toString());
 
 
-    var sn = ((unicodeInt - (fn * 588)) / 28);
+    var sn = ((unicodeInt - (fnInt * 588)) / 28);
     int snInt = wordToInteger(sn.toString());
 
     var tn = (unicodeInt % 28);

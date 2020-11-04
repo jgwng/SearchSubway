@@ -1,4 +1,7 @@
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'show ByteData, rootBundle;
+import 'package:seperatekorean/Debouncer.dart';
 import 'package:seperatekorean/const_of_hangul.dart';
 import 'package:seperatekorean/search_bar.dart';
 import 'package:collection/collection.dart';
@@ -18,13 +21,15 @@ class _MyHomePageState extends State<MyHomePage> {
   var array = [];
   var resultArray = [];
   var listResultArray = [];
-  var listArray = ["강낭","강상", "당랑", "망방", "상장", "앙장", "창장"];
   bool isFocused = false;
 
   List<dynamic> stations = List<dynamic>();
   List<dynamic> stationsForDisplay = List<dynamic>();
 
   FocusNode searchWordNode = FocusNode();
+
+  final Debouncer onSearchDebouncer = Debouncer(delay: Duration(milliseconds: 500));
+
   void _onFocusChange() async {
     setState(() {
       isFocused = !isFocused;
@@ -33,13 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-
-    stations = listArray;
-    stationsForDisplay = listArray;
-    for (int i = 0; i < listArray.length; i++) {
-      var wordResult = splitLetter(listArray[i]);
-      listResultArray.add(wordResult);
-    }
+    aaa();
     searchWordNode.addListener(_onFocusChange);
     super.initState();
   }
@@ -50,15 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void onChange(String text){
+  void onChange(String text) async{
+
     setState(() {
-//      array = splitLetter(text);
-//      stationsForDisplay = compareArray(array, listResultArray,listArray);
-//      print(stationsForDisplay);
-//      array = splitLetter(text);
-//
-//      stationsForDisplay = compareArray(array, listResultArray,listArray);
       array = splitLetter(text);
+
+      stationsForDisplay = compareArray(array, listResultArray,stations);
+//      stationsForDisplay = compareArray(array, listResultArray,listArray);
+//
+//      print(compareArray(array, listResultArray,listArray));
     });
   }
 
@@ -89,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       controller: wordController,
                       focusNode: searchWordNode,
                       onChange: onChange,
+                      suffixIconOnTab: aaa,
                     )),
                 Expanded(
                   child: ListView.builder(
@@ -106,11 +106,34 @@ class _MyHomePageState extends State<MyHomePage> {
         )); // This trailing comma makes auto-formatting nicer for build methods.
   }
 
+  aaa() async {
+    ByteData data = await rootBundle.load("assets/subway_stations_name.xlsx");
+    var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    var excel = Excel.decodeBytes(bytes,);
+
+    for (var table in excel.tables.keys) {
+      print(table); //sheet Name
+      print(excel.tables[table].maxCols);
+      print(excel.tables[table].maxRows);
+      for (var row in excel.tables[table].rows.sublist(1,excel.tables[table].rows.length)) {
+        stations.add(row[2]);
+      }
+    }
+
+    stationsForDisplay = stations;
+    for (int i = 0; i < stationsForDisplay.length; i++) {
+      var wordResult = splitLetter(stationsForDisplay[i]);
+      listResultArray.add(wordResult);
+    }
+    print(listResultArray);
+
+  }
+
 
   _listItem(index) {
     return GestureDetector(
       onTap: (){
-
+          print(stationsForDisplay[0]);
       },
       child: Container(
           decoration: BoxDecoration(
@@ -143,9 +166,10 @@ class _MyHomePageState extends State<MyHomePage> {
             index++;
           }
         } else {
-          if(item[i][2]==""){
-            if((item[i][0]==listChanged[i][j][0]) &&(item[i][0]==listChanged[i][j][0]) ){
+          if(item[j][2] ==""){
+            if((item[j][0]==listChanged[i][j][0])&&(item[j][1]==listChanged[i][j][1])){
               index++;
+              print('a');
             }
           }
           else if (equalizer(item[j], listChanged[i][j])) {
@@ -161,11 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return resultArray;
   }
-  Future<List<dynamic>> search(String search) async {
-    await Future.delayed(Duration(seconds: 2));
-    array = splitLetter(search);
-    stationsForDisplay = compareArray(array, listResultArray,listArray);
-  }
+
 
 
 
