@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seperatekorean/home_page.dart';
+import 'file:///C:/Users/gwjun/AndroidStudioProjects/seperatekorean/lib/screens/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Korean Search Bar'),
+      home: MyHomePage(title: '지하철 검색'),
     );
   }
 }
