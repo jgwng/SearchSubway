@@ -36,6 +36,12 @@ class _MyHomePageState extends State<MyHomePage> {
 //    aaa();
     searchWordNode.addListener(_onFocusChange);
     super.initState();
+    _getData().then((result){
+      setState(() {
+        stationsForDisplay = result;
+//        print(result);
+      });
+    });
   }
 
   @override
@@ -58,23 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var futureBuilder = new FutureBuilder(
-      future: _getData(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-            return new Text('loading...');
-          default:
-            if (snapshot.hasError)
-              return new Text('Error: ${snapshot.error}');
-            else
-              return createListView(context, snapshot);
-        }
-      },
-    );
-
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -105,15 +94,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChange: onChange,
                     )),
                 Expanded(
-                  child: futureBuilder,
+                  child: ListView.builder(
+                    itemCount: stationsForDisplay.length,
+                    shrinkWrap: false,
+                    itemBuilder: (context,index){
+                      return _listItem(stationsForDisplay[index]);
+                    },
                 ),
-              ],
             ),
-          ),
-        )); // This trailing comma makes auto-formatting nicer for build methods.
+          ])
+    ),
+    )
+    ); // This trailing comma makes auto-formatting nicer for build methods.
   }
 
-  Future<List<dynamic>> _getData() async {
+  Future<List<dynamic>> _getData() async{
     ByteData data = await rootBundle.load("assets/subway_stations_name.xlsx");
     var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     var excel = Excel.decodeBytes(bytes,);
@@ -134,23 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
         listResultArray.add(wordResult);
       }
     }
-    return stationsForDisplay;
-  }
-
-  Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<dynamic> values = snapshot.data;
-    return ListView.builder(
-      itemCount: values.length,
-      itemBuilder: (BuildContext context, int index) {
-        return  _listItem(values[index]);
-      },
-    );
+    return stations;
   }
 
   Widget _listItem(String text) {
     return GestureDetector(
       onTap: (){
-        print(text);
+        print(listResultArray);
+//        print(text);
       },
       child: Container(
           decoration: BoxDecoration(
