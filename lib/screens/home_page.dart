@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'show ByteData, rootBundle;
 import 'package:collection/collection.dart';
 import 'package:seperatekorean/consts/const_of_hangul.dart';
+import 'package:seperatekorean/screens/subway_arrival_page.dart';
 import 'package:seperatekorean/widget/search_bar.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -135,7 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _listItem(String text) {
     return GestureDetector(
       onTap: (){
-        print(listResultArray);
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+            SubwayArrival(stationName: text,)));
 //        print(text);
       },
       child: Container(
