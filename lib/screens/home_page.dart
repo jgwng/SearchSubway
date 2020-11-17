@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context) =>
-            SubwayArrival(stationName: text,)));
+            SubwayArrivalPage(stationName: text,)));
 //        print(text);
       },
       child: Container(
