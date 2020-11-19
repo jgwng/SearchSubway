@@ -1,8 +1,9 @@
-import 'package:excel/excel.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'show ByteData, rootBundle;
+import 'package:flutter/services.dart'show rootBundle;
 import 'package:collection/collection.dart';
 import 'package:seperatekorean/consts/const_of_hangul.dart';
+import 'package:seperatekorean/model/subway_station.dart';
 import 'package:seperatekorean/screens/subway_arrival_page.dart';
 import 'package:seperatekorean/widget/search_bar.dart';
 
@@ -37,6 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
 //    aaa();
     searchWordNode.addListener(_onFocusChange);
     super.initState();
+//    WidgetsBinding.instance.addPostFrameCallback((_) async {
+//      await _getData();
+//    });
     _getData().then((result){
       setState(() {
         stationsForDisplay = result;
@@ -55,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       array = splitLetter(text);
-
+      print(array);
       stationsForDisplay = compareArray(array, listResultArray,stations);
 //      stationsForDisplay = compareArray(array, listResultArray,listArray);
 //
@@ -93,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       controller: wordController,
                       focusNode: searchWordNode,
                       onChange: onChange,
+                      onTap: onTap,
                     )),
                 Expanded(
                   child: ListView.builder(
@@ -109,28 +114,21 @@ class _MyHomePageState extends State<MyHomePage> {
     ); // This trailing comma makes auto-formatting nicer for build methods.
   }
 
-  Future<List<dynamic>> _getData() async{
-    ByteData data = await rootBundle.load("assets/subway_stations_name.xlsx");
-    var bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-    var excel = Excel.decodeBytes(bytes,);
-
-    if(stations.length == 0){
-      for (var table in excel.tables.keys) {
-        print(table); //sheet Name
-        print(excel.tables[table].maxCols);
-        print(excel.tables[table].maxRows);
-        for (var row in excel.tables[table].rows.sublist(1,excel.tables[table].rows.length)) {
-          stations.add(row[2]);
-        }
-      }
-
-      stationsForDisplay = stations;
-      for (int i = 0; i < stationsForDisplay.length; i++) {
-        var wordResult = splitLetter(stationsForDisplay[i]);
-        listResultArray.add(wordResult);
-      }
-    }
+  Future<List<String>> _getData() async{
+    String jsonString = await rootBundle.loadString("assets/subway_stations_name.json");
+    var jsonResult = jsonDecode(jsonString)['DATA'];
+    for(int i=0;i<jsonResult.length;i++){
+      var json = jsonResult[i];
+      var subwayStation = SubwayStation.fromJson(json);
+      stations.add(subwayStation.name);
+      var wordResult = splitLetter(subwayStation.name);
+      listResultArray.add(wordResult);
+  }
+    stationsForDisplay = stations;
     return stations;
+//   var user = SubwayStation.fromJson(jsonResult);
+//   print(user);
+
   }
 
   Widget _listItem(String text) {
@@ -165,10 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
     int index = 0;
     int counter = item.length;
     resultArray = [];
-    Function equalizer = const ListEquality().equals;
     for (int i = 0; i < listChanged.length; i++) {
       for (int j = 0; j < counter; j++) {
-        if (item[j].length == 1) {
+        if(listChanged[i].length<item.length){
+        }
+        else if (item[j].length == 1) {
           if (item[j] == listChanged[i][j][0]) {
             index++;
           }
@@ -178,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
               index++;
             }
           }
-          else if (equalizer(item[j], listChanged[i][j])) {
+          else if (item[j].toString()==listChanged[i][j].toString()) {
             index++;
           }
         }
@@ -190,4 +189,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return resultArray;
   }
+
+  void onTap(){
+    setState((){
+      wordController.clear();
+      stationsForDisplay = stations;
+
+    });
+  }
 }
+
+
+

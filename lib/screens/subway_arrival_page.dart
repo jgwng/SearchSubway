@@ -31,6 +31,7 @@ class SubwayArrivalPageState extends State<SubwayArrivalPage>{
   String _subwayHeading;
   String _arvlMsg2;
 
+  List<SubwayArrival> subwayArrival = List<SubwayArrival>();
 
   String _response = '';
 
@@ -74,8 +75,8 @@ class SubwayArrivalPageState extends State<SubwayArrivalPage>{
           item['arvlMsg2']
       );
     });
-
-
+    subwayArrival = list;
+    print(list);
    SubwayArrival first = list[0];
 
    setState(() {
@@ -104,19 +105,35 @@ class SubwayArrivalPageState extends State<SubwayArrivalPage>{
       appBar: AppBar(
         title: Text('지하철 실시간 정보'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
           child:Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Text('rowNum ; $_rowNum'),
-              Text('_subwayId ; $_subwayId'),
-              Text('_trainLineNm ; $_trainLineNm'),
-              Text('_subwayHeading ; $_subwayHeading'),
-              Text('_arvlMsg2 ; $_arvlMsg2'),
+              ListView.builder(
+                  itemCount: subwayArrival.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return listInfo(subwayArrival[index]);
+                  }),
             ],
           )
       ),
     );
   }
-
+  Widget listInfo(SubwayArrival subwayArrival){
+    return Container(
+      height: 100,
+      child: Center(
+        child: Column(
+          children: [
+            Text('rowNum ; ${subwayArrival.rowNum}'),
+            Text('_subwayId ; ${subwayArrival.subwayId}'),
+            Text('_trainLineNm ;${subwayArrival.trainLineNm}'),
+            Text('_subwayHeading ; ${subwayArrival.subwayHeading}'),
+            Text('_arvlMsg2 ; ${subwayArrival.arvlMsg2}')
+          ],
+        ),
+      ),
+    );
+  }
 }
