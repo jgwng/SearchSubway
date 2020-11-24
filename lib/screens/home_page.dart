@@ -73,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
+          elevation: 0,
           title: Text(widget.title,style:TextStyle(
             fontSize: 15,fontFamily: "NotoSans",fontWeight: FontWeight.w500,
             color: Colors.black
