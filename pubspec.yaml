@@ -47,8 +47,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - subway_stations_name.csv
     - subway_stations_name.json
+    - assets/image/AppScreenShot.png
+    - assets/icon/back.png
+    - assets/icon/x.png
   fonts:
     - family: NotoSans
       fonts:

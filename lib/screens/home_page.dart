@@ -74,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           centerTitle: true,
           elevation: 0,
+          automaticallyImplyLeading: false,
           title: Text(widget.title,style:TextStyle(
             fontSize: 15,fontFamily: "NotoSans",fontWeight: FontWeight.w500,
             color: Colors.black
@@ -139,24 +140,33 @@ class _MyHomePageState extends State<MyHomePage> {
             SubwayArrivalPage(stationName: text,)));
 //        print(text);
       },
-      child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Color.fromRGBO(238, 238, 238, 1),width:1),
-              )
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 20,top: 20,bottom:20),
-            child: Text(
-              text,
-              style: TextStyle(
-                  fontSize: 22,
-                  fontFamily: "NotoSans",
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500
-              ),
+      child:
+      ListTile(
+        title:  Container(
+            decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: Color.fromRGBO(238, 238, 238, 1),width:1),
+                )
             ),
-          )),
+            child: Padding(
+              padding: EdgeInsets.only(left: 20,top: 20,bottom:20),
+              child: Text(
+                text,
+                style: TextStyle(
+                    fontSize: 22,
+                    fontFamily: "NotoSans",
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500
+                ),
+              ),
+            )),
+        trailing:
+        Container(
+          height: double.infinity,
+          child: Icon(Icons.arrow_forward_ios),
+        )
+        ,
+      ),
     );
   }
 

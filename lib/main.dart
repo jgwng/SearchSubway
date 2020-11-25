@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seperatekorean/screens/home_page.dart';
-import 'package:seperatekorean/screens/onBoarding.dart';
+import 'package:seperatekorean/screens/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool _isFirst;
