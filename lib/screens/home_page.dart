@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'show rootBundle;
+import 'package:flutter/services.dart'show ByteData, rootBundle;
 import 'package:collection/collection.dart';
 import 'package:seperatekorean/consts/const_of_hangul.dart';
 import 'package:seperatekorean/model/subway_station.dart';
@@ -38,9 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //    aaa();
     searchWordNode.addListener(_onFocusChange);
     super.initState();
-//    WidgetsBinding.instance.addPostFrameCallback((_) async {
-//      await _getData();
-//    });
+
     _getData().then((result){
       setState(() {
         stationsForDisplay = result;
@@ -61,9 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
       array = splitLetter(text);
       print(array);
       stationsForDisplay = compareArray(array, listResultArray,stations);
-//      stationsForDisplay = compareArray(array, listResultArray,listArray);
-//
-//      print(compareArray(array, listResultArray,listArray));
     });
   }
 
@@ -100,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       focusNode: searchWordNode,
                       onChange: onChange,
                       onTap: onTap,
+                      suffixIconOnTab: _getData,
                     )),
                 Expanded(
                   child: ListView.builder(
@@ -125,12 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
       stations.add(subwayStation.name);
       var wordResult = splitLetter(subwayStation.name);
       listResultArray.add(wordResult);
-  }
+    }
     stationsForDisplay = stations;
     return stations;
-//   var user = SubwayStation.fromJson(jsonResult);
-//   print(user);
-
   }
 
   Widget _listItem(String text) {
@@ -208,6 +202,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     });
   }
+
+
+
+
+
+
 }
 
 

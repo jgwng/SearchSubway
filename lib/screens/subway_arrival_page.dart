@@ -106,19 +106,30 @@ class SubwayArrivalPageState extends State<SubwayArrivalPage>{
         title: Text('지하철 실시간 정보'),
       ),
       body: SingleChildScrollView(
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ListView.builder(
-                  itemCount: subwayArrival.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return listInfo(subwayArrival[index]);
-                  }),
-            ],
+          child: FutureBuilder(
+            future: _httpGet(_buildUrl(widget.stationName)),
+            builder: (context,snapshot){
+              if(subwayArrival.length == 0){
+                return Center(
+                  child:Container(
+                    alignment: Alignment.center,
+
+                    height: MediaQuery.of(context).size.height,
+                    child: Text("해당 역에서\n운행중이지 않습니다.",textAlign: TextAlign.center,),
+                  ),
+                );
+              }else{
+                return ListView.builder(
+                    itemCount: subwayArrival.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return listInfo(subwayArrival[index]);
+                    });
+              }
+            },
+          ),
           )
-      ),
-    );
+      );
   }
   Widget listInfo(SubwayArrival subwayArrival){
     return Container(
@@ -136,4 +147,7 @@ class SubwayArrivalPageState extends State<SubwayArrivalPage>{
       ),
     );
   }
+
+
+
 }

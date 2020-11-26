@@ -1,3 +1,6 @@
+import 'package:excel/excel.dart';
+import 'package:flutter/services.dart';
+
 const f = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ',
   'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ',
   'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
@@ -43,3 +46,5 @@ List<dynamic> splitLetter(String text){
   }
   return arr;
 }
+
+
